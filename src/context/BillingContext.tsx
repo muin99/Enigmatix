@@ -1,37 +1,38 @@
-import { createContext, ReactNode, useContext, useState } from "react";
-import type { Pack, Plan, Transaction } from "@/types";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { packs as seedPacks, payments as seedPayments, plans as seedPlans, transactions as seedTransactions } from "@/data/billing";
+import type { Pack, Payment, Plan, Transaction } from "@/types";
 
 type BillingValue = {
   plans: Plan[];
   packs: Pack[];
+  payments: Payment[];
   transactions: Transaction[];
   balance: number;
-  refreshBilling: () => Promise<void>;
-  subscribe: (planId: number) => Promise<void>;
-  buyPack: (packId: number) => Promise<void>;
-  spendCredits: (amount: number, reason: string) => Promise<void>;
 };
 
 const BillingContext = createContext<BillingValue | null>(null);
 
 export function BillingProvider({ children }: { children: ReactNode }) {
-  const [plans] = useState<Plan[]>([]);
-  const [packs] = useState<Pack[]>([]);
-  const [transactions] = useState<Transaction[]>([]);
+  const { user } = useAuth();
+  const [plans] = useState<Plan[]>(seedPlans);
+  const [packs] = useState<Pack[]>(seedPacks);
+  const [payments] = useState<Payment[]>(seedPayments);
+  const [transactions] = useState<Transaction[]>(seedTransactions);
 
-  // TEMP: stubs, filled in by the billing context phase
-  const value: BillingValue = {
-    plans,
-    packs,
-    transactions,
-    balance: 0,
-    refreshBilling: async () => {},
-    subscribe: async () => {},
-    buyPack: async () => {},
-    spendCredits: async () => {},
-  };
+  const balance = useMemo(
+    () =>
+      transactions
+        .filter((t) => t.userId === user?.id)
+        .reduce((sum, t) => sum + t.amount, 0),
+    [transactions, user]
+  );
 
-  return <BillingContext.Provider value={value}>{children}</BillingContext.Provider>;
+  return (
+    <BillingContext.Provider value={{ plans, packs, payments, transactions, balance }}>
+      {children}
+    </BillingContext.Provider>
+  );
 }
 
 export function useBilling() {

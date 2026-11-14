@@ -4,7 +4,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  password: string; // TEMP: plain text for json-server, remove with the real backend
+  password: string;
   role: "user" | "admin";
   status: "active" | "banned";
   banReason?: string;
@@ -111,3 +111,4 @@ export interface AuditLog {
   action: string;
   createdAt: string;
 }
+

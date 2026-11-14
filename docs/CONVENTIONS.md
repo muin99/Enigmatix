@@ -6,21 +6,19 @@
 - Merge with "Create a merge commit" so every commit stays in the history.
 
 ## Commits
-- Format: `type: short message`, where type is feat, fix, chore, docs or refactor.
+- Format: `type: short message`, where type is feat, fix, chore, docs, style or refactor.
 - One logical change per commit.
 
 ## Code
 - Screens live in `src/app`, shared UI in `src/components`, state in `src/context`.
+- Mock data lives in `src/data`. Screens read it through the context hooks, never directly.
 - Use the UI kit and theme tokens. No hard coded colors in screens.
-- Anything temporary is marked with a `TEMP:` comment so we can find and remove it.
 
 ## Running the app
 1. `npm install`
-2. `npm run api` (json-server on port 3000)
-3. `npx expo start`
-4. `npm run reset-db` restores the seed data. Run it before committing so test data is not pushed.
+2. `npx expo start`
 
-## Test accounts (from db.json)
+## Demo accounts
 | Email | Password | Role |
 |---|---|---|
 | admin@enigmatix.app | admin123 | admin |

@@ -1,27 +1,31 @@
 import { createContext, ReactNode, useContext, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import type { Contact } from "@/types";
 
 type ContactsValue = {
   contacts: Contact[];
-  refreshContacts: () => Promise<void>;
-  addContact: (contactUserId: number) => Promise<void>;
+  addContact: (contactUserId: number) => void;
 };
 
 const ContactsContext = createContext<ContactsValue | null>(null);
 
 export function ContactsProvider({ children }: { children: ReactNode }) {
-  const [contacts] = useState<Contact[]>([]);
+  const { user } = useAuth();
+  const [contacts, setContacts] = useState<Contact[]>([]);
 
-  // TEMP: stubs, Mahfi implements these
-  const value: ContactsValue = {
-    contacts,
-    refreshContacts: async () => {},
-    addContact: async () => {
-      throw new Error("TODO Mahfi: implement addContact");
-    },
+  const addContact = (contactUserId: number) => {
+    if (!user) return;
+    setContacts((prev) => [
+      ...prev,
+      { id: prev.length + 1, ownerId: user.id, contactUserId, verified: false },
+    ]);
   };
 
-  return <ContactsContext.Provider value={value}>{children}</ContactsContext.Provider>;
+  return (
+    <ContactsContext.Provider value={{ contacts, addContact }}>
+      {children}
+    </ContactsContext.Provider>
+  );
 }
 
 export function useContacts() {
