@@ -4,6 +4,7 @@
   "main": "expo-router/entry",
   "dependencies": {
     "@expo/ui": "~58.0.28",
+    "@expo/vector-icons": "^15.0.2",
     "expo": "~58.0.25",
     "expo-constants": "~58.0.16",
     "expo-device": "~58.0.5",
@@ -18,7 +19,6 @@
     "expo-symbols": "~58.0.5",
     "expo-system-ui": "~58.0.7",
     "expo-web-browser": "~58.0.8",
-    "json-server": "^0.17.4",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-native": "0.88.1",
@@ -39,9 +39,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint",
-    "api": "json-server --watch db.json --port 3000 --host 0.0.0.0",
-    "reset-db": "git checkout db.json"
+    "lint": "expo lint"
   },
   "private": true
 }
