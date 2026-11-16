@@ -6,7 +6,7 @@ type AuthValue = {
   user: User | null;
   users: User[];
   login: (email: string, password: string) => boolean;
-  signup: (name: string, email: string, password: string) => void;
+  signup: (name: string, email: string, password: string) => boolean;
   logout: () => void;
 };
 
@@ -14,8 +14,7 @@ const AuthContext = createContext<AuthValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<User[]>(seedUsers);
-  // Starts signed in as the first regular user so every screen has a current user.
-  const [user, setUser] = useState<User | null>(seedUsers[1]);
+  const [user, setUser] = useState<User | null>(null);
 
   const login = (email: string, password: string) => {
     const match = users.find(
@@ -28,6 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signup = (name: string, email: string, password: string) => {
+    if (users.some((u) => u.email === email)) return false;
     const id = users.length + 1;
     const created: User = {
       id,
@@ -41,6 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     setUsers([...users, created]);
     setUser(created);
+    return true;
   };
 
   const logout = () => setUser(null);
