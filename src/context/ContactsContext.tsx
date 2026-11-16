@@ -6,6 +6,7 @@ import type { Contact } from "@/types";
 type ContactsValue = {
   contacts: Contact[];
   addContact: (contactUserId: number) => void;
+  toggleVerified: (id: number) => void;
 };
 
 const ContactsContext = createContext<ContactsValue | null>(null);
@@ -22,8 +23,14 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
     ]);
   };
 
+  const toggleVerified = (id: number) => {
+    setContacts((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, verified: !c.verified } : c)),
+    );
+  };
+
   return (
-    <ContactsContext.Provider value={{ contacts, addContact }}>
+    <ContactsContext.Provider value={{ contacts, addContact, toggleVerified }}>
       {children}
     </ContactsContext.Provider>
   );

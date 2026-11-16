@@ -5,6 +5,7 @@ export default function ContactsLayout() {
     <Stack screenOptions={{ headerTitleAlign: "left", headerShadowVisible: false }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="add" options={{ title: "Add contact" }} />
+      <Stack.Screen name="[id]" options={{ title: "Contact" }} />
     </Stack>
   );
 }
