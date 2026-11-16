@@ -1,12 +1,12 @@
 import { StyleSheet, Text, TextInput, TextInputProps, View } from "react-native";
 import { colors, radius } from "@/theme";
 
-type Props = TextInputProps & { label: string };
+type Props = TextInputProps & { label?: string };
 
 export function Input({ label, style, ...rest }: Props) {
   return (
     <View style={styles.wrap}>
-      <Text style={styles.label}>{label}</Text>
+      {label ? <Text style={styles.label}>{label}</Text> : null}
       <TextInput
         placeholderTextColor={colors.faint}
         style={[styles.input, style]}
