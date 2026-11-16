@@ -8,6 +8,8 @@ type AuthValue = {
   login: (email: string, password: string) => boolean;
   signup: (name: string, email: string, password: string) => boolean;
   logout: () => void;
+  banUser: (id: number, reason: string) => void;
+  unbanUser: (id: number) => void;
   backedUp: boolean;
   markBackedUp: () => void;
 };
@@ -41,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       status: "active",
       publicKey: `key-${id}`,
       planId: 1,
+      joinedAt: new Date().toISOString(),
     };
     setUsers([...users, created]);
     setUser(created);
@@ -49,11 +52,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => setUser(null);
 
+  const banUser = (id: number, reason: string) => {
+    setUsers((prev) =>
+      prev.map((u) => (u.id === id ? { ...u, status: "banned", banReason: reason } : u)),
+    );
+  };
+
+  const unbanUser = (id: number) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === id ? { ...u, status: "active", banReason: undefined } : u,
+      ),
+    );
+  };
+
   const markBackedUp = () => setBackedUp(true);
 
   return (
     <AuthContext.Provider
-      value={{ user, users, login, signup, logout, backedUp, markBackedUp }}
+      value={{
+        user,
+        users,
+        login,
+        signup,
+        logout,
+        banUser,
+        unbanUser,
+        backedUp,
+        markBackedUp,
+      }}
     >
       {children}
     </AuthContext.Provider>

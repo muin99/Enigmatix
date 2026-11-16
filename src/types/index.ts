@@ -10,6 +10,7 @@ export interface User {
   banReason?: string;
   publicKey: string;
   planId: number;
+  joinedAt: string;
 }
 
 export interface Contact {
