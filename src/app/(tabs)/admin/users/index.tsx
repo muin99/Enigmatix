@@ -25,7 +25,6 @@ export default function UsersScreen() {
   return (
     <Screen>
       <Input
-        label="Search"
         placeholder="Search users"
         autoCapitalize="none"
         value={query}

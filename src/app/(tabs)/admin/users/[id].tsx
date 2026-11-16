@@ -49,7 +49,9 @@ export default function UserDetailScreen() {
         options={{
           title: "User detail",
           headerRight: () => (
-            <Pill label={banned ? "Banned" : "Active"} dark={banned} />
+            <View style={styles.status}>
+              <Pill label={banned ? "Banned" : "Active"} dark={banned} />
+            </View>
           ),
         }}
       />
@@ -104,6 +106,7 @@ export default function UserDetailScreen() {
 }
 
 const styles = StyleSheet.create({
+  status: { alignSelf: "center", marginRight: spacing.sm },
   head: { flexDirection: "row", alignItems: "center", gap: spacing.md },
   headText: { gap: 3 },
   name: { fontSize: 16, fontWeight: "700", color: colors.text },
