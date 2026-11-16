@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { contacts as seedContacts } from "@/data/contacts";
 import type { Contact } from "@/types";
 
 type ContactsValue = {
@@ -11,7 +12,7 @@ const ContactsContext = createContext<ContactsValue | null>(null);
 
 export function ContactsProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>(seedContacts);
 
   const addContact = (contactUserId: number) => {
     if (!user) return;
