@@ -8,6 +8,8 @@ type AuthValue = {
   login: (email: string, password: string) => boolean;
   signup: (name: string, email: string, password: string) => boolean;
   logout: () => void;
+  backedUp: boolean;
+  markBackedUp: () => void;
 };
 
 const AuthContext = createContext<AuthValue | null>(null);
@@ -15,6 +17,7 @@ const AuthContext = createContext<AuthValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<User[]>(seedUsers);
   const [user, setUser] = useState<User | null>(null);
+  const [backedUp, setBackedUp] = useState(false);
 
   const login = (email: string, password: string) => {
     const match = users.find(
@@ -46,8 +49,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => setUser(null);
 
+  const markBackedUp = () => setBackedUp(true);
+
   return (
-    <AuthContext.Provider value={{ user, users, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{ user, users, login, signup, logout, backedUp, markBackedUp }}
+    >
       {children}
     </AuthContext.Provider>
   );
