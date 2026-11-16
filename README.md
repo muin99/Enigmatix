@@ -54,3 +54,17 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Store and admin screens
+
+Store (user):
+- Plans: the available plans, with the current one marked
+- Plan detail: features and price of a plan
+- Credit packs: packs of credits to buy
+- Wallet: credit balance and recent activity
+- Purchase history: payments made by the user
+
+Admin:
+- Dashboard: revenue, users, paid plans and refunds at a glance
+- Payments: every payment with its status
+- Plans manager: edit or add plans

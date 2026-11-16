@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useContext, useState } from "react";
 import { users as seedUsers } from "@/data/users";
 import type { User } from "@/types";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 type AuthValue = {
   user: User | null;
@@ -19,7 +19,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = (email: string, password: string) => {
     const match = users.find(
-      (u) => u.email === email && u.password === password && u.status === "active"
+      (u) =>
+        u.email === email && u.password === password && u.status === "active",
     );
     if (!match) return false;
     setUser(match);
