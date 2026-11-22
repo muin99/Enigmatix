@@ -5,7 +5,7 @@ import { createContext, ReactNode, useContext, useState } from "react";
 type AuthValue = {
   user: User | null;
   users: User[];
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => "ok" | "invalid" | "banned";
   signup: (name: string, email: string, password: string) => boolean;
   logout: () => void;
   banUser: (id: number, reason: string) => void;
@@ -22,13 +22,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [backedUp, setBackedUp] = useState(false);
 
   const login = (email: string, password: string) => {
-    const match = users.find(
-      (u) =>
-        u.email === email && u.password === password && u.status === "active",
-    );
-    if (!match) return false;
+    const match = users.find((u) => u.email === email && u.password === password);
+    if (!match) return "invalid";
+    if (match.status === "banned") return "banned";
     setUser(match);
-    return true;
+    return "ok";
   };
 
   const signup = (name: string, email: string, password: string) => {

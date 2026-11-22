@@ -30,9 +30,17 @@ export default function KeyBackupScreen() {
   };
 
   const onRestore = () => {
-    const words = typed.trim().toLowerCase().split(/\s+/);
+    const words = typed.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (words.length === 0) {
+      setError("Enter the 12 words of your recovery phrase.");
+      return;
+    }
+    if (words.length !== 12) {
+      setError(`You entered ${words.length} words. The phrase has exactly 12.`);
+      return;
+    }
     if (words.join(" ") !== phrase.join(" ")) {
-      setError("That phrase does not match your key.");
+      setError("This phrase does not match your key. Check the words and their order.");
       return;
     }
     markBackedUp();
@@ -70,9 +78,12 @@ export default function KeyBackupScreen() {
             multiline
             style={styles.multiline}
             value={typed}
-            onChangeText={setTyped}
+            error={error}
+            onChangeText={(text) => {
+              setTyped(text);
+              setError("");
+            }}
           />
-          {error ? <Text style={styles.error}>{error}</Text> : null}
           <Button title="Restore" onPress={onRestore} />
         </View>
       ) : null}
@@ -107,6 +118,5 @@ const styles = StyleSheet.create({
   note: { fontSize: 12, color: colors.faint },
   restore: { gap: spacing.md },
   multiline: { height: 80, paddingTop: 12, textAlignVertical: "top" },
-  error: { fontSize: 13, color: colors.danger },
   buttons: { gap: spacing.md, marginTop: spacing.lg },
 });
