@@ -68,3 +68,20 @@ Admin:
 - Dashboard: revenue, users, paid plans and refunds at a glance
 - Payments: every payment with its status
 - Plans manager: edit or add plans
+
+## Accounts, contacts and user admin screens
+
+Accounts:
+- Login: email and password, starts here when signed out
+- Signup: create an account, rejects an email that is already used
+- Account: plan, credits and key backup status, with links to the store, wallet and key backup, and log out
+
+Contacts:
+- Contacts list: your contacts with a verified badge
+- Add contact: search users by name or email and add one
+- Contact detail: key fingerprint, default recall, verified toggle, message and report
+- Key backup: recovery phrase to write down, and restore from phrase
+
+Admin:
+- Users: search every user with plan and status
+- User detail: joined date, credits, reports against, ban with a required reason, unban, refund last payment
