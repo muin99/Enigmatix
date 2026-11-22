@@ -1,6 +1,3 @@
-import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Avatar } from "@/components/Avatar";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
@@ -10,6 +7,9 @@ import { ScreenHeader } from "@/components/ScreenHeader";
 import { useAuth } from "@/context/AuthContext";
 import { useBilling } from "@/context/BillingContext";
 import { colors, spacing } from "@/theme";
+import { useRouter } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AccountScreen() {
   const router = useRouter();
@@ -42,8 +42,16 @@ export default function AccountScreen() {
         </Card>
 
         <Button title="Manage plan" onPress={() => router.push("/store")} />
-        <Button title="Credit wallet" variant="outline" onPress={() => router.push("/store/wallet")} />
-        <Button title="Key backup" variant="outline" onPress={() => router.push("/contacts/backup")} />
+        <Button
+          title="Credit wallet"
+          variant="outline"
+          onPress={() => router.push("/store/wallet")}
+        />
+        <Button
+          title="Key backup"
+          variant="outline"
+          onPress={() => router.push("/contacts/backup")}
+        />
         <Button title="Log out" variant="outline" onPress={onLogout} />
       </Screen>
     </SafeAreaView>
