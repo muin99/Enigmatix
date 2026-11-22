@@ -3,27 +3,45 @@ import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
+import { FormError } from "@/components/FormError";
 import { Input } from "@/components/Input";
 import { useAuth } from "@/context/AuthContext";
 import { colors, font, radius, spacing } from "@/theme";
+import { isEmail } from "@/utils/validate";
 
 export default function LoginScreen() {
   const router = useRouter();
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [formError, setFormError] = useState("");
 
   const onSubmit = () => {
-    setError("");
-    if (!email.trim() || password.length < 8) {
-      setError("Enter your email and a password of at least 8 characters.");
-      return;
-    }
-    if (login(email.trim().toLowerCase(), password)) {
+    const cleanEmail = email.trim().toLowerCase();
+    const nextEmailError = !cleanEmail
+      ? "Enter your email."
+      : !isEmail(cleanEmail)
+        ? "Enter a valid email like you@example.com."
+        : "";
+    const nextPasswordError = !password
+      ? "Enter your password."
+      : password.length < 8
+        ? "Password must be at least 8 characters."
+        : "";
+    setEmailError(nextEmailError);
+    setPasswordError(nextPasswordError);
+    setFormError("");
+    if (nextEmailError || nextPasswordError) return;
+
+    const result = login(cleanEmail, password);
+    if (result === "ok") {
       router.replace("/chats");
+    } else if (result === "banned") {
+      setFormError("This account has been banned. Contact support if you think this is a mistake.");
     } else {
-      setError("Wrong email or password, or the account is banned.");
+      setFormError("Wrong email or password. Check them and try again.");
     }
   };
 
@@ -37,22 +55,32 @@ export default function LoginScreen() {
         <Text style={styles.subtitle}>Messages that stay yours. Sign in to continue.</Text>
 
         <View style={styles.form}>
+          {formError ? <FormError message={formError} /> : null}
           <Input
             label="Email"
             placeholder="you@example.com"
             autoCapitalize="none"
             keyboardType="email-address"
             value={email}
-            onChangeText={setEmail}
+            error={emailError}
+            onChangeText={(text) => {
+              setEmail(text);
+              setEmailError("");
+              setFormError("");
+            }}
           />
           <Input
             label="Password"
             placeholder="At least 8 characters"
             secureTextEntry
             value={password}
-            onChangeText={setPassword}
+            error={passwordError}
+            onChangeText={(text) => {
+              setPassword(text);
+              setPasswordError("");
+              setFormError("");
+            }}
           />
-          {error ? <Text style={styles.error}>{error}</Text> : null}
           <Button title="Log in" onPress={onSubmit} />
         </View>
 
@@ -80,7 +108,6 @@ const styles = StyleSheet.create({
   title: { fontSize: 24, fontWeight: "700", color: colors.text, marginTop: spacing.lg },
   subtitle: { fontSize: 13, color: colors.muted, marginTop: spacing.xs },
   form: { gap: spacing.lg, marginTop: spacing.xl },
-  error: { fontSize: 13, color: colors.danger },
   switch: { fontSize: 13, color: colors.muted, textAlign: "center", marginTop: spacing.lg },
   link: { color: colors.text, fontWeight: "600", textDecorationLine: "underline" },
   footer: { fontSize: 11, color: colors.faint, textAlign: "center", paddingBottom: spacing.lg },

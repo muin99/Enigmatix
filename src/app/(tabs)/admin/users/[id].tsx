@@ -35,7 +35,11 @@ export default function UserDetailScreen() {
 
   const onBan = () => {
     if (!reason.trim()) {
-      setError("A ban reason is required.");
+      setError("Enter a reason. It is kept in the audit log.");
+      return;
+    }
+    if (reason.trim().length < 5) {
+      setError("Reason is too short. Describe why this user is being banned.");
       return;
     }
     banUser(target.id, reason.trim());
@@ -84,9 +88,12 @@ export default function UserDetailScreen() {
             multiline
             style={styles.multiline}
             value={reason}
-            onChangeText={setReason}
+            error={error}
+            onChangeText={(text) => {
+              setReason(text);
+              setError("");
+            }}
           />
-          {error ? <Text style={styles.error}>{error}</Text> : null}
         </View>
       )}
 
@@ -101,6 +108,7 @@ export default function UserDetailScreen() {
         disabled={!canRefund}
         onPress={() => refundLastPayment(target.id)}
       />
+      {canRefund ? null : <Text style={styles.note}>This user has no paid payment to refund.</Text>}
     </Screen>
   );
 }
@@ -115,5 +123,5 @@ const styles = StyleSheet.create({
   reason: { fontSize: 14, color: colors.text, marginTop: spacing.xs },
   reasonBox: { gap: spacing.sm },
   multiline: { height: 80, paddingTop: 12, textAlignVertical: "top" },
-  error: { fontSize: 13, color: colors.danger },
+  note: { fontSize: 12, color: colors.faint, textAlign: "center" },
 });

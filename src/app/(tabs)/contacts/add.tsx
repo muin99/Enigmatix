@@ -29,6 +29,20 @@ export default function AddContactScreen() {
             (u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term)),
         );
 
+  const matches = users.filter(
+    (u) => u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term),
+  );
+  let searchError = "";
+  if (term !== "" && results.length === 0) {
+    if (matches.some((u) => u.id === user?.id)) {
+      searchError = "That is your own account.";
+    } else if (matches.some((u) => taken.includes(u.id))) {
+      searchError = "This person is already in your contacts.";
+    } else {
+      searchError = `No user matches "${query.trim()}". Check the spelling and try again.`;
+    }
+  }
+
   const onAdd = () => {
     if (selectedId === null) return;
     addContact(selectedId);
@@ -43,14 +57,12 @@ export default function AddContactScreen() {
           placeholder="Search a user"
           autoCapitalize="none"
           value={query}
+          error={searchError}
           onChangeText={(text) => {
             setQuery(text);
             setSelectedId(null);
           }}
         />
-        {term !== "" && results.length === 0 ? (
-          <Text style={styles.empty}>No users found.</Text>
-        ) : null}
         {results.map((u) => (
           <Pressable
             key={u.id}
@@ -79,7 +91,6 @@ export default function AddContactScreen() {
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.bg },
   body: { flex: 1, padding: spacing.lg, gap: spacing.md },
-  empty: { fontSize: 13, color: colors.muted },
   result: {
     flexDirection: "row",
     alignItems: "center",
